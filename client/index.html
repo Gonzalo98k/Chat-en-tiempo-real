@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script type="module">
+    import {io} from "https://cdn.socket.io/4.7.5/socket.io.esm.min.js"
+    const socket = io("http://localhost:3000")
+
+    let boton = document.querySelector(".boton")
+    let inputMessage = document.querySelector(".inputMessage")
+    let chat = document.querySelector(".chat")
+    let fragment = document.createDocumentFragment()
+    let fragment1 = document.createDocumentFragment()
+
+    let container = document.querySelector(".container")
+    
+    socket.on("message", (a)=>{
+        let div = document.createElement("div")
+        div.textContent = `__${a}`
+        div.classList.add("div")
+        fragment.appendChild(div)
+        chat.appendChild(fragment)
+
+        console.log(a);
+    })
+
+    boton.addEventListener("click", (e)=>{
+        e.preventDefault(e)
+        
+        if (inputMessage) {
+            socket.emit("messageClient", inputMessage.value);
+            inputMessage.value = ""
+        }
+    })
+
+</script>
+
+<style>
+    
+body{
+    margin:0px ;
+    background-color: rgb(27, 1, 14);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    display: grid;
+    place-content: center;
+    height: 100vh;
+}
+
+.chat{
+    height: 90vh;
+    width: 400px;
+    background-color: white;
+}
+
+.container{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    background-color: white;
+}
+
+.inputMessage{
+    border-radius: 100px;
+    margin-right: 10px;
+    height: 30px;
+    width: 300px;
+}
+
+.boton{
+    width: 55px;
+    background-color: rgb(75, 75, 218);
+    border-radius: 10px;
+    color: rgb(243, 221, 221);
+}
+
+.div{
+    margin-top: 3px;
+    background-color: rgb(147, 226, 147);
+    width: max-content;
+    border-radius: 100px;
+}
+</style>
+<body>
+    <section class="chat">
+
+    </section>
+
+    <section class="container">
+        <input type="text" placeholder="Message" class="inputMessage">
+        <button class="boton">Enviar</button>
+         
+    </section>
+    
+</body>
+</html>
